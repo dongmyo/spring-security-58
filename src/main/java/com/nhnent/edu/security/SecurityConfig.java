@@ -21,13 +21,15 @@ public class SecurityConfig {
             .authorizeHttpRequests()
                 .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
                 /* TODO #4: 실습 - 비공개 프로젝트 URL은 (`/private-project/**`) ADMIN 이나 MEMBER 권한이 있을 때 접근 가능하도록 설정해주세요. */
-                /* ... */
+                .requestMatchers("/private-project/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_MEMBER")
                 .requestMatchers("/project/**").authenticated()
                 .anyRequest().permitAll()
                 .and()
             .requiresChannel()
                 /* TODO #3: 실습 - 관리툴/비공개 프로젝트/프로젝트 페이지는 secure로 접속되도록 설정해주세요. */
-                /* ... */
+                .requestMatchers("/admin/**").requiresSecure()
+                .requestMatchers("/private-project/**").requiresSecure()
+                .requestMatchers("/project/**").requiresSecure()
                 .anyRequest().requiresInsecure()
                 .and()
             .formLogin()
@@ -44,7 +46,8 @@ public class SecurityConfig {
                     .headerValue(XXssProtectionHeaderWriter.HeaderValue.ENABLED_MODE_BLOCK)
                     .and()
                 /* TODO #5: 실습 - Security HTTP Response header 중 `X-Frame-Options` 헤더의 값을 SAMEORIGIN으로 설정해주세요. */
-                /* ... */
+                .frameOptions()
+                    .sameOrigin()
                 .and()
             .csrf()
                 .disable()
