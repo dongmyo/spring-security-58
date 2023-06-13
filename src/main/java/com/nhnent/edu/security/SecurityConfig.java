@@ -29,16 +29,18 @@ public class SecurityConfig {
                 .requestMatchers("/project/**").requiresSecure()
                 .anyRequest().requiresInsecure()
                 .and()
-            // TODO #1: 로그인 페이지 커스터마이징
             .formLogin()
                 .loginPage("/login/form")
                 .loginProcessingUrl("/login/process")
                 .usernameParameter("id")
                 .passwordParameter("pwd")
+                // TODO #1: login success handler 설정
+                .successHandler(new CustomLoginSuccessHandler())
                 .and()
-            // TODO #5: 로그아웃 페이지 커스터마이징
             .logout()
                 .logoutUrl("/auth/logout")
+                // TODO #6: 실습 - logout 커스터마이즈
+                //          로그아웃했을 때 SESSION 이라는 이름의 쿠키를 지우고 세션을 invalidate 시켜주세요.
                 .and()
             .headers()
                 .defaultsDisabled()
