@@ -41,6 +41,8 @@ public class SecurityConfig {
                 .logoutUrl("/auth/logout")
                 // TODO #6: 실습 - logout 커스터마이즈
                 //          로그아웃했을 때 SESSION 이라는 이름의 쿠키를 지우고 세션을 invalidate 시켜주세요.
+                .invalidateHttpSession(true)
+                .deleteCookies("SESSION")
                 .and()
             .headers()
                 .defaultsDisabled()
