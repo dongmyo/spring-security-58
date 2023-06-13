@@ -13,7 +13,6 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addViewController("/project/**").setViewName("project");
         registry.addViewController("/private-project/**").setViewName("private-project");
         registry.addViewController("/login/form").setViewName("login");
-        // TODO #7: `/redirect-index`로 접근하면 `/`로 redirect
         registry.addRedirectViewController("/redirect-index", "/");
     }
 

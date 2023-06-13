@@ -21,7 +21,6 @@ public class SecurityConfig {
                 .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
                 .requestMatchers("/private-project/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_MEMBER")
                 .requestMatchers("/project/**").authenticated()
-                // TODO #6: `/redirect-index` 에 접근하기 위해서는 로그인을 해야 한다
                 .requestMatchers("/redirect-index").authenticated()
                 .anyRequest().permitAll()
                 .and()
@@ -32,14 +31,16 @@ public class SecurityConfig {
                 .anyRequest().requiresInsecure()
                 .and()
             .formLogin()
-                .loginPage("/login/form")
+                // TODO #2: 기본 로그인 페이지 이용할 수 있도록 `.loginPage()` 설정 제거
+                //.loginPage("/login/form")
                 .loginProcessingUrl("/login/process")
                 .usernameParameter("id")
                 .passwordParameter("pwd")
                 .successHandler(new CustomLoginSuccessHandler())
                 .and()
             .logout()
-                .logoutUrl("/auth/logout")
+                // TODO #3: 기본 로그아웃 페이지 이용할 수 있도록 `.logoutUrl()` 설정 제거
+                //.logoutUrl("/auth/logout")
                 .invalidateHttpSession(true)
                 .deleteCookies("SESSION")
                 .and()
@@ -55,8 +56,9 @@ public class SecurityConfig {
                 .frameOptions()
                     .sameOrigin()
                 .and()
+            // TODO #1: Csrf enable
             .csrf()
-                .disable()
+                .and()
             .addFilterBefore(usernameAdjustingFilter(), UsernamePasswordAuthenticationFilter.class)
             .sessionManagement()
                 .maximumSessions(1)
