@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<div sec:authorize="isAuthenticated()">
+    <!-- TODO #4: `sec:authentication` -->
+    <span sec:authentication="name" />,&nbsp;
+    <a href="/auth/logout">Logout</a>
+</div>
+<div sec:authorize="!isAuthenticated()">
+    <!-- TODO #5: 로그인 이후에 `/`로 다시 redirect 하기 -->
+    <a href="/redirect-index">Login</a>
+</div>
+<br />
+<a href="/">Go to Main</a>
+<br />
+<br />
+<br />
+
+</html>

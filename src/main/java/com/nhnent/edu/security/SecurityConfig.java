@@ -21,6 +21,8 @@ public class SecurityConfig {
                 .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
                 .requestMatchers("/private-project/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_MEMBER")
                 .requestMatchers("/project/**").authenticated()
+                // TODO #6: `/redirect-index` 에 접근하기 위해서는 로그인을 해야 한다
+                .requestMatchers("/redirect-index").authenticated()
                 .anyRequest().permitAll()
                 .and()
             .requiresChannel()
@@ -34,13 +36,10 @@ public class SecurityConfig {
                 .loginProcessingUrl("/login/process")
                 .usernameParameter("id")
                 .passwordParameter("pwd")
-                // TODO #1: login success handler 설정
                 .successHandler(new CustomLoginSuccessHandler())
                 .and()
             .logout()
                 .logoutUrl("/auth/logout")
-                // TODO #6: 실습 - logout 커스터마이즈
-                //          로그아웃했을 때 SESSION 이라는 이름의 쿠키를 지우고 세션을 invalidate 시켜주세요.
                 .invalidateHttpSession(true)
                 .deleteCookies("SESSION")
                 .and()
