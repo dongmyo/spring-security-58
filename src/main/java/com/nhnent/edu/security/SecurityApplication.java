@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class SecurityApplication {
-	// TODO #2: tomcat connector 추가
 	@Bean
 	public WebServerFactoryCustomizer<TomcatServletWebServerFactory> customizer(
 		@Value("${server.http.port}") int httpPort) {

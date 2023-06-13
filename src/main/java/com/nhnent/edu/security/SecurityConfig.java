@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -20,13 +19,11 @@ public class SecurityConfig {
         return http
             .authorizeHttpRequests()
                 .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
-                /* TODO #4: 실습 - 비공개 프로젝트 URL은 (`/private-project/**`) ADMIN 이나 MEMBER 권한이 있을 때 접근 가능하도록 설정해주세요. */
                 .requestMatchers("/private-project/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_MEMBER")
                 .requestMatchers("/project/**").authenticated()
                 .anyRequest().permitAll()
                 .and()
             .requiresChannel()
-                /* TODO #3: 실습 - 관리툴/비공개 프로젝트/프로젝트 페이지는 secure로 접속되도록 설정해주세요. */
                 .requestMatchers("/admin/**").requiresSecure()
                 .requestMatchers("/private-project/**").requiresSecure()
                 .requestMatchers("/project/**").requiresSecure()
@@ -45,7 +42,6 @@ public class SecurityConfig {
                 .xssProtection()
                     .headerValue(XXssProtectionHeaderWriter.HeaderValue.ENABLED_MODE_BLOCK)
                     .and()
-                /* TODO #5: 실습 - Security HTTP Response header 중 `X-Frame-Options` 헤더의 값을 SAMEORIGIN으로 설정해주세요. */
                 .frameOptions()
                     .sameOrigin()
                 .and()
@@ -76,7 +72,8 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        // TODO #5: PasswordEncoder 변경
+        return new Sha256PasswordEncoder();
     }
 
 }
