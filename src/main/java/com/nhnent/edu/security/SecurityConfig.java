@@ -45,10 +45,13 @@ public class SecurityConfig {
             .csrf()
                 .and()
             // TODO #3: 실습 - UsernameAdjustingFilter를 UsernamePasswordAuthenticationFilter 앞에 추가하시오.
-            /* ... */
+            .addFilterBefore(usernameAdjustingFilter(), UsernamePasswordAuthenticationFilter.class)
             // TODO #4: 실습 - 최대 세션 갯수를 1개로 제한하시오
             .sessionManagement()
                 /* cf.) maximumSessions, maxSessionsPreventsLogin */
+                .maximumSessions(1)
+                    .maxSessionsPreventsLogin(true)
+                    .and()
                 .and()
             .build();
     }
