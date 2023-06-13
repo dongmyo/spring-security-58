@@ -1,0 +1,37 @@
+// TODO #13: 멤버 초기 데이터 적재를 위한 rest api 요청
+POST /members HTTP/1.1
+Host: localhost:8080
+Content-Type: application/json
+
+{
+  "id": "admin",
+  "name": "Administrator",
+  "pwd": "admin",
+  "authority": "ROLE_ADMIN"
+}
+
+###
+
+POST /members HTTP/1.1
+Host: localhost:8080
+Content-Type: application/json
+
+{
+  "id": "member",
+  "name": "I reMember",
+  "pwd": "member",
+  "authority": "ROLE_MEMBER"
+}
+
+###
+
+POST /members HTTP/1.1
+Host: localhost:8080
+Content-Type: application/json
+
+{
+  "id": "guest",
+  "name": "gu-est",
+  "pwd": "guest",
+  "authority": "ROLE_GUEST"
+}

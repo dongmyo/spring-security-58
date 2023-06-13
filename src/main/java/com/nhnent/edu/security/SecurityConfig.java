@@ -3,11 +3,11 @@ package com.nhnent.edu.security;
 import javax.servlet.Filter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.header.writers.XXssProtectionHeaderWriter;
@@ -43,12 +43,11 @@ public class SecurityConfig {
                     .and()
                 .and()
             .csrf()
-                .and()
-            // TODO #3: 실습 - UsernameAdjustingFilter를 UsernamePasswordAuthenticationFilter 앞에 추가하시오.
+                // TODO #14: disable csrf
+                .disable()
+                //.and()
             .addFilterBefore(usernameAdjustingFilter(), UsernamePasswordAuthenticationFilter.class)
-            // TODO #4: 실습 - 최대 세션 갯수를 1개로 제한하시오
             .sessionManagement()
-                /* cf.) maximumSessions, maxSessionsPreventsLogin */
                 .maximumSessions(1)
                     .maxSessionsPreventsLogin(true)
                     .and()
@@ -56,30 +55,28 @@ public class SecurityConfig {
             .build();
     }
 
-    // TODO #1: email 형태였던 username을 다시 원래대로 돌림
-    @Bean
-    public InMemoryUserDetailsManager userDetailsService() {
-        UserDetails admin = User.withUsername("admin")
-            .password("{noop}admin")
-            .authorities("ROLE_ADMIN")
-            .build();
-
-        UserDetails member = User.withUsername("member")
-            .password("{noop}member")
-            .authorities("ROLE_MEMBER")
-            .build();
-
-        UserDetails guest = User.withUsername("guest")
-            .password("{noop}guest")
-            .authorities("ROLE_GUEST")
-            .build();
-
-        return new InMemoryUserDetailsManager(admin, member, guest);
-    }
+    // TODO #1: InMemoryUserDetailsManager 빈 제거
+    /* ... */
 
     @Bean
     public Filter usernameAdjustingFilter() {
         return new UsernameAdjustingFilter("username");
+    }
+
+    // TODO #2: DaoAuthenticationProvider 빈 등록
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider(CustomUserDetailsService customUserDetailsService) {
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+        authenticationProvider.setUserDetailsService(customUserDetailsService);
+        authenticationProvider.setPasswordEncoder(passwordEncoder());
+
+        return authenticationProvider;
+    }
+
+    // TODO #3: PasswordEncoder 빈 등록
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
 }

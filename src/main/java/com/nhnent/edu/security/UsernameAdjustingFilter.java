@@ -32,7 +32,6 @@ public class UsernameAdjustingFilter extends OncePerRequestFilter {
                 public String getParameter(String name) {
                     if (Objects.equals(name, usernameParameter)) {
                         String username = super.getParameter(name);
-                        // TODO #2: username이 email 형태일 경우, `@nhnacademy.com` 을 제거하도록 처리
                         if (Objects.nonNull(username) && username.endsWith("@nhn.com")) {
                             return username.substring(0, username.indexOf("@nhn.com"));
                         }
