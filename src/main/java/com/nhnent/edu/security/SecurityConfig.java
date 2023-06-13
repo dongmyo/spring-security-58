@@ -21,7 +21,7 @@ public class SecurityConfig {
                 .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
                 .requestMatchers("/private-project/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_MEMBER")
                 /* TODO #1: 실습 - 공개 프로젝트 URL은 (`/project/**`) 로그인한 경우에는 누구나 접근 가능하도록 설정해주세요. */
-                /* ... */
+                .requestMatchers("/project/**").authenticated()
                 .requestMatchers("/redirect-index").authenticated()
                 .anyRequest().permitAll()
                 .and()
@@ -33,7 +33,7 @@ public class SecurityConfig {
                 .passwordParameter("pwd")
                 .successHandler(new CustomLoginSuccessHandler())
                 // TODO #5: 실습 - 로그인 실패 핸들러를 설정해주세요.
-                /* ... */
+                .failureHandler(new CustomLoginFailureHandler())
                 .and()
             .logout()
                 .logoutSuccessUrl("/login/form?logout")
@@ -58,7 +58,7 @@ public class SecurityConfig {
             .addFilterBefore(usernameAdjustingFilter(), UsernamePasswordAuthenticationFilter.class)
             .exceptionHandling()
                 /* TODO #12: 실습 - custom 403 에러 페이지(`/error/403`)를 설정해주세요. */
-                /* ... */
+                .accessDeniedPage("/error/403")
                 .and()
             .build();
     }
