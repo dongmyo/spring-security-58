@@ -44,25 +44,29 @@ public class SecurityConfig {
                 .and()
             .csrf()
                 .and()
-            // TODO #3: UsernameAdjustingFilter 를 UsernamePasswordAuthenticationFilter 앞에 추가
-            .addFilterBefore(usernameAdjustingFilter(), UsernamePasswordAuthenticationFilter.class)
+            // TODO #3: 실습 - UsernameAdjustingFilter를 UsernamePasswordAuthenticationFilter 앞에 추가하시오.
+            /* ... */
+            // TODO #4: 실습 - 최대 세션 갯수를 1개로 제한하시오
+            .sessionManagement()
+                /* cf.) maximumSessions, maxSessionsPreventsLogin */
+                .and()
             .build();
     }
 
-    // TODO #1: username 을 email 형태로 변경
+    // TODO #1: email 형태였던 username을 다시 원래대로 돌림
     @Bean
     public InMemoryUserDetailsManager userDetailsService() {
-        UserDetails admin = User.withUsername("admin@nhn.com")
+        UserDetails admin = User.withUsername("admin")
             .password("{noop}admin")
             .authorities("ROLE_ADMIN")
             .build();
 
-        UserDetails member = User.withUsername("member@nhn.com")
+        UserDetails member = User.withUsername("member")
             .password("{noop}member")
             .authorities("ROLE_MEMBER")
             .build();
 
-        UserDetails guest = User.withUsername("guest@nhn.com")
+        UserDetails guest = User.withUsername("guest")
             .password("{noop}guest")
             .authorities("ROLE_GUEST")
             .build();
@@ -70,7 +74,6 @@ public class SecurityConfig {
         return new InMemoryUserDetailsManager(admin, member, guest);
     }
 
-    // TODO #4: UsernameAdjustingFilter 를 빈으로 등록
     @Bean
     public Filter usernameAdjustingFilter() {
         return new UsernameAdjustingFilter("username");
