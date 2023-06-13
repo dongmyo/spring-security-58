@@ -29,9 +29,16 @@ public class SecurityConfig {
                 .requestMatchers("/project/**").requiresSecure()
                 .anyRequest().requiresInsecure()
                 .and()
+            // TODO #1: 로그인 페이지 커스터마이징
             .formLogin()
+                .loginPage("/login/form")
+                .loginProcessingUrl("/login/process")
+                .usernameParameter("id")
+                .passwordParameter("pwd")
                 .and()
+            // TODO #5: 로그아웃 페이지 커스터마이징
             .logout()
+                .logoutUrl("/auth/logout")
                 .and()
             .headers()
                 .defaultsDisabled()
@@ -72,7 +79,6 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        // TODO #5: PasswordEncoder 변경
         return new Sha256PasswordEncoder();
     }
 

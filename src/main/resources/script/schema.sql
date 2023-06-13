@@ -13,7 +13,6 @@ CREATE TABLE IF NOT EXISTS `Authorities` (
     PRIMARY KEY(`member_id`)
 );
 
--- TODO #3: change password column value
 MERGE INTO `Members` KEY (`member_id`) VALUES ( 'admin' , 'Administrator', RAWTOHEX(HASH('SHA256', STRINGTOUTF8('admin'), 1024)));
 MERGE INTO `Members` KEY (`member_id`) VALUES ( 'member', 'I reMember', RAWTOHEX(HASH('SHA256', STRINGTOUTF8('member'), 1024)));
 MERGE INTO `Members` KEY (`member_id`) VALUES ( 'guest' , 'gu-est', RAWTOHEX(HASH('SHA256', STRINGTOUTF8('guest'), 1024)));

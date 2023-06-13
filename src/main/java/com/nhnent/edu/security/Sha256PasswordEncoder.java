@@ -6,8 +6,6 @@ import org.springframework.security.crypto.codec.Hex;
 import org.springframework.security.crypto.codec.Utf8;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-// TODO #4: SHA-256 hashing password encoder without salt
-//      cf.) org.springframework.security.crypto.password.StandardPasswordEncoder
 public class Sha256PasswordEncoder implements PasswordEncoder {
     private final Digester digester;
 
