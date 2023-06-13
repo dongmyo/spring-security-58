@@ -4,7 +4,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-// TODO #12: Member Rest Controller
 @RestController
 public class MemberRestController {
     private final MemberService memberService;

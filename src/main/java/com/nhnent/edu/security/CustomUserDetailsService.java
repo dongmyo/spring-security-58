@@ -11,7 +11,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-// TODO #4: Custom UserDetailsService 빈
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
     private final MemberRepository memberRepository;
@@ -22,20 +21,14 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
 
-    // TODO #5: `loadUserByUsername()` 메서드 구현
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<Member> optionalMember = memberRepository.findById(username);
-        if (optionalMember.isEmpty()) {
-            throw new UsernameNotFoundException(username + " is not found");
-        }
+        Member member = memberRepository.findById(username)
+            .orElseThrow(() -> new UsernameNotFoundException(username + " not found"));
 
-        Member member = optionalMember.get();
-
-        List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(
-            member.getAuthority().getAuthority()));
-
-        return new User(member.getName(), member.getPwd(), authorities);
+        /* TODO #6: 실습 - `UserDetails`의 구현 클래스를 반환하세요. */
+        /*          cf.) org.springframework.security.core.userdetails.User */
+        return null;
     }
 
 }

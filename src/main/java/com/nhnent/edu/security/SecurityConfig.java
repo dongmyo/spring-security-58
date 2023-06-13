@@ -20,9 +20,15 @@ public class SecurityConfig {
         return http
             .authorizeHttpRequests()
                 .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
-                .requestMatchers("/private-project/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_MEMBER")
+                /* TODO #4: 실습 - 비공개 프로젝트 URL은 (`/private-project/**`) ADMIN 이나 MEMBER 권한이 있을 때 접근 가능하도록 설정해주세요. */
+                /* ... */
                 .requestMatchers("/project/**").authenticated()
                 .anyRequest().permitAll()
+                .and()
+            .requiresChannel()
+                /* TODO #3: 실습 - 관리툴/비공개 프로젝트/프로젝트 페이지는 secure로 접속되도록 설정해주세요. */
+                /* ... */
+                .anyRequest().requiresInsecure()
                 .and()
             .formLogin()
                 .and()
@@ -37,15 +43,11 @@ public class SecurityConfig {
                 .xssProtection()
                     .headerValue(XXssProtectionHeaderWriter.HeaderValue.ENABLED_MODE_BLOCK)
                     .and()
-                .httpStrictTransportSecurity()
-                    .maxAgeInSeconds(31536000)
-                    .includeSubDomains(true)
-                    .and()
+                /* TODO #5: 실습 - Security HTTP Response header 중 `X-Frame-Options` 헤더의 값을 SAMEORIGIN으로 설정해주세요. */
+                /* ... */
                 .and()
             .csrf()
-                // TODO #14: disable csrf
                 .disable()
-                //.and()
             .addFilterBefore(usernameAdjustingFilter(), UsernamePasswordAuthenticationFilter.class)
             .sessionManagement()
                 .maximumSessions(1)
@@ -55,15 +57,11 @@ public class SecurityConfig {
             .build();
     }
 
-    // TODO #1: InMemoryUserDetailsManager 빈 제거
-    /* ... */
-
     @Bean
     public Filter usernameAdjustingFilter() {
         return new UsernameAdjustingFilter("username");
     }
 
-    // TODO #2: DaoAuthenticationProvider 빈 등록
     @Bean
     public DaoAuthenticationProvider authenticationProvider(CustomUserDetailsService customUserDetailsService) {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
@@ -73,7 +71,6 @@ public class SecurityConfig {
         return authenticationProvider;
     }
 
-    // TODO #3: PasswordEncoder 빈 등록
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

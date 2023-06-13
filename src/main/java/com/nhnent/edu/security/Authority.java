@@ -9,7 +9,6 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
-// TODO #9: `Authorities` 테이블에 대한 엔티티
 @Getter
 @Setter
 @Entity
