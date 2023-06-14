@@ -13,7 +13,9 @@ import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
+import org.springframework.security.oauth2.core.AuthenticationMethod;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
+import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.header.writers.XXssProtectionHeaderWriter;
@@ -32,7 +34,6 @@ public class SecurityConfig {
                 .requestMatchers("/redirect-index").authenticated()
                 .anyRequest().permitAll()
                 .and()
-            // TODO #1: `oauth2Login()`
             .oauth2Login()
                 .clientRegistrationRepository(clientRegistrationRepository())
                 .authorizedClientService(authorizedClientService())
@@ -91,23 +92,22 @@ public class SecurityConfig {
         return new Sha256PasswordEncoder();
     }
 
-    // TODO #2: ClientRegistrationRepository with ClientRegistration.
     @Bean
     public ClientRegistrationRepository clientRegistrationRepository() {
-        return new InMemoryClientRegistrationRepository(ClientRegistration.withRegistrationId("naver")
-            .clientId("i1uKug9bdiBnP3FLed03")
-            .clientSecret("4RkRczMtEY")
+        // TODO #1: PAYCO ID OAuth2 설정
+        return new InMemoryClientRegistrationRepository(ClientRegistration.withRegistrationId("payco")
+            .clientId("3RDU4G5NI_cxk4VNvSI7")
+            .clientSecret("fxVFAe2HjN98DOyrV6kyJVHD")
             .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-            .scope("name", "email", "profile_image")
-            .redirectUri("{baseUrl}/{action}/oauth2/code/{registrationId}")
-            .authorizationUri("https://nid.naver.com/oauth2.0/authorize")
-            .tokenUri("https://nid.naver.com/oauth2.0/token")
-            .userInfoUri("https://openapi.naver.com/v1/nid/me")
-            .userNameAttributeName("response")
+            .redirectUri("{baseUrl}/login/oauth2/code/{registrationId}")
+            .authorizationUri("https://alpha-id.payco.com/oauth2.0/authorize")
+            .tokenUri("https://alpha-id.payco.com/oauth2.0/token")
+            .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_POST)
+            .userInfoUri("https://dev-apis.krp.toastoven.net/payco/friends/getMemberProfileByFriendsToken.json")
+            .userInfoAuthenticationMethod(AuthenticationMethod.FORM)
             .build());
     }
 
-    // TODO #3: OAuth2AuthorizedClientService
     @Bean
     public OAuth2AuthorizedClientService authorizedClientService() {
         return new InMemoryOAuth2AuthorizedClientService(clientRegistrationRepository());
