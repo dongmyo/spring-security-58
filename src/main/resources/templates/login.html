@@ -6,7 +6,6 @@
 </head>
 <body>
 
-<!-- TODO : #8 `error`라는 파라미터가 있으면 로그인 에러 출력 -->
 <span th:if="${param.error != null}">
     <div style="color: red; ">ID or password is invalid</div>
     <br />
@@ -14,14 +13,11 @@
 
 <form method="post" action="/login/process">
     <span th:text="ID" />: <input type="text" name="id" /><br />
-    <!-- TODO : #9 `invalidUsername` 값이 설정되어 있으면 아이디 없음 에러 출력 -->
     <span th:if="${session.invalidUsername}" style="color: red; ">ID Not Found</span><br />
 
     <span th:text="Password" />: <input type="password" name="pwd" /><br />
-    <!-- TODO : #10 `invalidPassword` 값이 설정되어 있으면 비밀번호 틀림 에러 출력 -->
     <span th:if="${session.invalidPassword}" style="color: red; ">Password Not match</span><br />
 
-    <!-- TODO #4 : 실습 - taglib를 이용해서 Csrf token을 추가해주세요 -->
     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
     <input type="submit" />
 </form>
