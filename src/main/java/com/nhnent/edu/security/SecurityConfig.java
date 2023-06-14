@@ -37,6 +37,10 @@ public class SecurityConfig {
             .oauth2Login()
                 .clientRegistrationRepository(clientRegistrationRepository())
                 .authorizedClientService(authorizedClientService())
+                // TODO : #1 authorizationRequestResolver 설정
+                .authorizationEndpoint()
+                    .authorizationRequestResolver(customAuthorizationRequestResolver())
+                    .and()
                 .and()
 //            .formLogin()
 //                .loginPage("/login/form")
@@ -94,7 +98,6 @@ public class SecurityConfig {
 
     @Bean
     public ClientRegistrationRepository clientRegistrationRepository() {
-        // TODO #1: PAYCO ID OAuth2 설정
         return new InMemoryClientRegistrationRepository(ClientRegistration.withRegistrationId("payco")
             .clientId("3RDU4G5NI_cxk4VNvSI7")
             .clientSecret("fxVFAe2HjN98DOyrV6kyJVHD")
@@ -111,6 +114,12 @@ public class SecurityConfig {
     @Bean
     public OAuth2AuthorizedClientService authorizedClientService() {
         return new InMemoryOAuth2AuthorizedClientService(clientRegistrationRepository());
+    }
+
+    // TODO : #2 customize OAuth2AuthorizationRequestResolver.
+    @Bean
+    public CustomAuthorizationRequestResolver customAuthorizationRequestResolver() {
+        return new CustomAuthorizationRequestResolver(clientRegistrationRepository());
     }
 
 }
