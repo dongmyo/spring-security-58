@@ -7,6 +7,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.oauth2.client.CommonOAuth2Provider;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.InMemoryOAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
@@ -32,10 +33,9 @@ public class SecurityConfig {
                 .requestMatchers("/redirect-index").authenticated()
                 .anyRequest().permitAll()
                 .and()
-            // TODO #1: `oauth2Login()`
             .oauth2Login()
-                .clientRegistrationRepository(clientRegistrationRepository())
-                .authorizedClientService(authorizedClientService())
+                // TODO : #4 실습 - clientRegistrationRepository와 authorizedClientService를 설정해주세요.
+                /* ... */
                 .and()
 //            .formLogin()
 //                .loginPage("/login/form")
@@ -91,26 +91,24 @@ public class SecurityConfig {
         return new Sha256PasswordEncoder();
     }
 
-    // TODO #2: ClientRegistrationRepository with ClientRegistration.
     @Bean
     public ClientRegistrationRepository clientRegistrationRepository() {
-        return new InMemoryClientRegistrationRepository(ClientRegistration.withRegistrationId("naver")
-            .clientId("i1uKug9bdiBnP3FLed03")
-            .clientSecret("4RkRczMtEY")
-            .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-            .scope("name", "email", "profile_image")
-            .redirectUri("{baseUrl}/{action}/oauth2/code/{registrationId}")
-            .authorizationUri("https://nid.naver.com/oauth2.0/authorize")
-            .tokenUri("https://nid.naver.com/oauth2.0/token")
-            .userInfoUri("https://openapi.naver.com/v1/nid/me")
-            .userNameAttributeName("response")
-            .build());
+        // TODO : #2 실습 - ClientRegistrationRepository 구현체를 생성하세요.
+        //        아래 github() 메서드를 활용하세요.
+        return null;
     }
 
-    // TODO #3: OAuth2AuthorizedClientService
     @Bean
     public OAuth2AuthorizedClientService authorizedClientService() {
-        return new InMemoryOAuth2AuthorizedClientService(clientRegistrationRepository());
+        // TODO : #3 실습 - OAuth2AuthorizedClientService 구현체를 생성하세요.
+        return null;
+    }
+
+    private ClientRegistration github() {
+        return CommonOAuth2Provider.GITHUB.getBuilder("github")
+            .userNameAttributeName("name")
+            // TODO #1: 실습 - github에서 생성한 어플리케이션 정보를 참조해서 client_id와 client_secret을 등록하세요.
+            .build();
     }
 
 }
