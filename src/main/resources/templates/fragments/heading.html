@@ -2,7 +2,6 @@
 <html lang="ko" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <div sec:authorize="isAuthenticated()">
-    <!-- TODO #4: authentication 객체가 바뀜에 따라 수정 -->
     <span sec:authentication="name" />,&nbsp;
     <a href="/logout">Logout</a>
 </div>

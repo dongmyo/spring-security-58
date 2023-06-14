@@ -13,9 +13,13 @@ import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
+import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.AuthenticationMethod;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.header.writers.XXssProtectionHeaderWriter;
@@ -37,9 +41,12 @@ public class SecurityConfig {
             .oauth2Login()
                 .clientRegistrationRepository(clientRegistrationRepository())
                 .authorizedClientService(authorizedClientService())
-                // TODO : #1 authorizationRequestResolver 설정
                 .authorizationEndpoint()
                     .authorizationRequestResolver(customAuthorizationRequestResolver())
+                    .and()
+                // TODO #1: userService 설정
+                .userInfoEndpoint()
+                    .userService(oauth2UserService())
                     .and()
                 .and()
 //            .formLogin()
@@ -116,10 +123,24 @@ public class SecurityConfig {
         return new InMemoryOAuth2AuthorizedClientService(clientRegistrationRepository());
     }
 
-    // TODO : #2 customize OAuth2AuthorizationRequestResolver.
     @Bean
     public CustomAuthorizationRequestResolver customAuthorizationRequestResolver() {
         return new CustomAuthorizationRequestResolver(clientRegistrationRepository());
+    }
+
+    // TODO : #1 DefaultOAuth2UserService를 확장.
+    @Bean
+    public OAuth2UserService<OAuth2UserRequest, OAuth2User> oauth2UserService() {
+        DefaultOAuth2UserService oauth2UserService = new DefaultOAuth2UserService();
+        oauth2UserService.setRequestEntityConverter(requestEntityConverter());
+
+        return oauth2UserService;
+    }
+
+    // TODO : #2 custom RequestEntity Converter 빈 등록.
+    @Bean
+    public CustomRequestEntityConverter requestEntityConverter() {
+        return new CustomRequestEntityConverter();
     }
 
 }

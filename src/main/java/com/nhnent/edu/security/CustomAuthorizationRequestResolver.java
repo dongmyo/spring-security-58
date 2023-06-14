@@ -10,7 +10,6 @@ import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequest
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestResolver;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 
-// TODO : #3 CustomAuthorizationRequestResolver 클래스 작성.
 public class CustomAuthorizationRequestResolver implements OAuth2AuthorizationRequestResolver {
     private final OAuth2AuthorizationRequestResolver delegate;
 
