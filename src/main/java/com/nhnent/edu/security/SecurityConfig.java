@@ -43,7 +43,9 @@ public class SecurityConfig {
                 .clientRegistrationRepository(clientRegistrationRepository())
                 .authorizedClientService(authorizedClientService())
                 // TODO #4: 실습 - UserInfo Endpoint 커스터마이즈
-                /* ... */
+                .userInfoEndpoint()
+                    .userService(oauth2UserService())
+                    .and()
                 .and()
 //            .formLogin()
 //                .loginPage("/login/form")
