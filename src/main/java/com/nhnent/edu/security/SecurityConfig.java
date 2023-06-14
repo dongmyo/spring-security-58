@@ -8,13 +8,18 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.InMemoryOAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.client.registration.ClientRegistration;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
+import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.header.writers.XXssProtectionHeaderWriter;
 
 @EnableWebSecurity(debug = true)
-// TODO : #6 `@EnableMethodSecurity`
-//@EnableMethodSecurity
+@EnableMethodSecurity
 @Configuration
 public class SecurityConfig {
     @Bean
@@ -27,14 +32,19 @@ public class SecurityConfig {
                 .requestMatchers("/redirect-index").authenticated()
                 .anyRequest().permitAll()
                 .and()
-            .formLogin()
-                .loginPage("/login/form")
-                .loginProcessingUrl("/login/process")
-                .usernameParameter("id")
-                .passwordParameter("pwd")
-                .successHandler(new CustomLoginSuccessHandler())
-                .failureHandler(new CustomLoginFailureHandler())
+            // TODO #1: `oauth2Login()`
+            .oauth2Login()
+                .clientRegistrationRepository(clientRegistrationRepository())
+                .authorizedClientService(authorizedClientService())
                 .and()
+//            .formLogin()
+//                .loginPage("/login/form")
+//                .loginProcessingUrl("/login/process")
+//                .usernameParameter("id")
+//                .passwordParameter("pwd")
+//                .successHandler(new CustomLoginSuccessHandler())
+//                .failureHandler(new CustomLoginFailureHandler())
+//                .and()
             .logout()
                 .logoutSuccessUrl("/login/form?logout")
                 .invalidateHttpSession(true)
@@ -79,6 +89,28 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new Sha256PasswordEncoder();
+    }
+
+    // TODO #2: ClientRegistrationRepository with ClientRegistration.
+    @Bean
+    public ClientRegistrationRepository clientRegistrationRepository() {
+        return new InMemoryClientRegistrationRepository(ClientRegistration.withRegistrationId("naver")
+            .clientId("i1uKug9bdiBnP3FLed03")
+            .clientSecret("4RkRczMtEY")
+            .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+            .scope("name", "email", "profile_image")
+            .redirectUri("{baseUrl}/{action}/oauth2/code/{registrationId}")
+            .authorizationUri("https://nid.naver.com/oauth2.0/authorize")
+            .tokenUri("https://nid.naver.com/oauth2.0/token")
+            .userInfoUri("https://openapi.naver.com/v1/nid/me")
+            .userNameAttributeName("response")
+            .build());
+    }
+
+    // TODO #3: OAuth2AuthorizedClientService
+    @Bean
+    public OAuth2AuthorizedClientService authorizedClientService() {
+        return new InMemoryOAuth2AuthorizedClientService(clientRegistrationRepository());
     }
 
 }
